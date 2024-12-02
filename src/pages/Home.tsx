@@ -88,6 +88,7 @@ export function Home() {
             className="w-full h-auto rounded-lg"
           />
         </div>
+
       </div>
     </div>
   );
