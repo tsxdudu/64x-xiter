@@ -9,6 +9,7 @@ const products = [
     price: 20.99,
     description: 'Evite detecção',
     icon: Clock,
+    image: '/imgs/bypass.jpg',
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ const products = [
     price: 50.99,
     description: '30 dias de acesso ilimitado',
     icon: ShieldCheck,
+    image: '/imgs/xit.jpg',
   },
   {
     id: 3,
@@ -23,6 +25,7 @@ const products = [
     price: 20.99,
     description: 'Remova restrições',
     icon: Ban,
+    image: '/imgs/desban.jpg',
   },
 ];
 
@@ -66,29 +69,17 @@ export function Home() {
               >
                 Adicionar ao Carrinho
               </Button>
+              {}
+              <div className="mt-4">
+                <img
+                  src={product.image}
+                  alt={`Imagem de ${product.name}`}
+                  className="w-full h-auto rounded-lg"
+                />
+              </div>
             </div>
           ))}
         </div>
-
-        { }
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <img
-            src="/imgs/bypass.jpg"
-            alt="Imagem 1"
-            className="w-full h-auto rounded-lg"
-          />
-          <img
-            src="/imgs/xit.jpg"
-            alt="Imagem 2"
-            className="w-full h-auto rounded-lg"
-          />
-          <img
-            src="/imgs/desban.jpg"
-            alt="Imagem 3"
-            className="w-full h-auto rounded-lg"
-          />
-        </div>
-
       </div>
     </div>
   );
