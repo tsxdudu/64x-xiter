@@ -5,11 +5,20 @@ import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { QRCodeCanvas } from 'qrcode.react';
 
+type Transaction = {
+  id: number;
+  type: 'deposit' | 'purchase';
+  amount: number;
+  date: string;
+  method: string;
+};
+
 export function Profile() {
   const { user } = getAuth();
   const [amount, setAmount] = useState('');
   const [qrCodeData, setQrCodeData] = useState('');
   const [showQRCode, setShowQRCode] = useState(false);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   if (!user) return null;
 
@@ -37,6 +46,21 @@ export function Profile() {
 
     setQrCodeData(data);
     setShowQRCode(true);
+  };
+
+  const handleFinalizeTransaction = (method: string) => {
+    if (!amount || parseFloat(amount) <= 0) return;
+
+    
+    const newTransaction: Transaction = {
+      id: transactions.length + 1,
+      type: 'deposit',
+      amount: parseFloat(amount),
+      date: new Date().toLocaleDateString('pt-BR'),
+      method: method,
+    };
+
+    setTransactions([...transactions, newTransaction]);
   };
 
   return (
@@ -73,21 +97,30 @@ export function Profile() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => generateQRCode('PayPal')}
+                onClick={() => {
+                  generateQRCode('PayPal');
+                  handleFinalizeTransaction('PayPal');
+                }}
               >
                 Pagar com PayPal
               </Button>
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => generateQRCode('PIX')}
+                onClick={() => {
+                  generateQRCode('PIX');
+                  handleFinalizeTransaction('PIX');
+                }}
               >
                 Pagar com PIX
               </Button>
               <Button
                 variant="outline"
                 className="w-full sm:col-span-2 lg:col-span-1"
-                onClick={() => generateQRCode('Bitcoin')}
+                onClick={() => {
+                  generateQRCode('Bitcoin');
+                  handleFinalizeTransaction('Bitcoin');
+                }}
               >
                 Pagar com Bitcoin
               </Button>
@@ -104,6 +137,26 @@ export function Profile() {
             </div>
           )}
 
+        </div>
+
+        <div className="bg-surface rounded-lg p-4 sm:p-8 mt-8">
+          <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6">Histórico de Transações</h3>
+          {transactions.length === 0 ? (
+            <p className="text-gray-400">Nenhuma transação realizada ainda.</p>
+          ) : (
+            <div className="space-y-4">
+              {transactions.map((transaction) => (
+                <div key={transaction.id} className="flex justify-between items-center">
+                  <div>
+                    <p className="text-white">{transaction.method}</p>
+                    <p className="text-sm text-gray-400">
+                      {transaction.type === 'deposit' ? 'Depósito' : 'Compra'} - R${transaction.amount.toFixed(2)} em {transaction.date}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

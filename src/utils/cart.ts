@@ -2,11 +2,28 @@ import { Cart, CartItem } from '../types/cart';
 
 const CART_KEY = 'gaming_store_cart';
 
+
+const calculateTotal = (items: CartItem[]): number => {
+  return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+};
+
+
 export const getCart = (): Cart => {
   const cart = localStorage.getItem(CART_KEY);
-  if (!cart) return { items: [], total: 0 };
-  return JSON.parse(cart);
+  try {
+    return cart ? JSON.parse(cart) : { items: [], total: 0 };
+  } catch (error) {
+    console.error('Erro ao obter o carrinho do localStorage:', error);
+    return { items: [], total: 0 };
+  }
 };
+
+
+const updateCart = (cart: Cart) => {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  window.dispatchEvent(new Event('cartUpdate'));
+};
+
 
 export const addToCart = (item: Omit<CartItem, 'quantity'>) => {
   const cart = getCart();
@@ -18,25 +35,20 @@ export const addToCart = (item: Omit<CartItem, 'quantity'>) => {
     cart.items.push({ ...item, quantity: 1 });
   }
 
-  cart.total = cart.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  
-  // Dispatch custom event for cart updates
-  window.dispatchEvent(new Event('cartUpdate'));
+  cart.total = calculateTotal(cart.items);
+  updateCart(cart);
 };
+
 
 export const removeFromCart = (itemId: number) => {
   const cart = getCart();
   cart.items = cart.items.filter((item) => item.id !== itemId);
-  cart.total = cart.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  
-  // Dispatch custom event for cart updates
-  window.dispatchEvent(new Event('cartUpdate'));
+  cart.total = calculateTotal(cart.items);
+  updateCart(cart);
 };
+
 
 export const clearCart = () => {
   localStorage.removeItem(CART_KEY);
-  // Dispatch custom event for cart updates
   window.dispatchEvent(new Event('cartUpdate'));
 };
