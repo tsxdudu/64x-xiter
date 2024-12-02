@@ -59,8 +59,8 @@ export function Home() {
               <p className="text-2xl sm:text-3xl font-bold text-center text-primary mb-4 sm:mb-6">
                 R${product.price.toFixed(2)}
               </p>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full"
                 onClick={() => handleAddToCart(product)}
               >
@@ -70,20 +70,20 @@ export function Home() {
           ))}
         </div>
 
-        {}
+        { }
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <img
-            src="src\imgs\bypass.jpg" 
+            src="/imgs/bypass.jpg"
             alt="Imagem 1"
             className="w-full h-auto rounded-lg"
           />
           <img
-            src="src\imgs\xit.jpg" 
+            src="/imgs/xit.jpg"
             alt="Imagem 2"
             className="w-full h-auto rounded-lg"
           />
           <img
-            src="src\imgs\desban.jpg"
+            src="/imgs/desban.jpg"
             alt="Imagem 3"
             className="w-full h-auto rounded-lg"
           />
